@@ -7,7 +7,7 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    application
+    java
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
@@ -19,9 +19,9 @@ repositories {
 dependencies {
 
     implementation(libs.bundles.flink)
-    //implementation(libs.bundles.logging)
+    implementation(libs.bundles.log4j)
 
-    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.bundles.testing)
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
@@ -53,10 +53,10 @@ tasks {
     }
 }
 
-application {
+//application {
     // Define the main class for the application.
     // mainClass = "org.example.App"
-}
+//}
 
 tasks.named<Test>("test") {
     // Use JUnit Platform for unit tests.

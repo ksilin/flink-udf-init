@@ -1,0 +1,14 @@
+confluent_cloud_api_key         = "XXX"
+confluent_cloud_api_secret      = "XXX"
+organization_id       = "XXX"       # optionally use CONFLUENT_ORGANIZATION_ID env var
+environment_id        = "env-nvv5xz"        # optionally use CONFLUENT_ENVIRONMENT_ID env var
+flink_compute_pool_id = "lfcp-kknvdm" # optionally use FLINK_COMPUTE_POOL_ID env var
+# flink_rest_endpoint   = var.flink_rest_endpoint   # optionally use FLINK_REST_ENDPOINT env var
+flink_api_key         = "XXX"         # optionally use FLINK_API_KEY env var
+flink_api_secret      = "XXX"      # optionally use FLINK_API_SECRET env var
+flink_principal_id    = "u-zm22n3"    # optionally use FLINK_PRINCIPAL_ID env var
+
+current_catalog = "ksilin"
+current_database = "aws_fra_basic"
+
+artifact_file  = "../scalar/build/libs/app-shadow.jar"
