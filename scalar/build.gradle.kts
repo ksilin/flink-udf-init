@@ -11,6 +11,10 @@ plugins {
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
+version = "0.0.1"
+group = "org.example"
+base.archivesName.set("scalar-udf") // Controls the JAR filename
+
 repositories {
     mavenCentral()
     maven("https://packages.confluent.io/maven/")
@@ -19,14 +23,11 @@ repositories {
 dependencies {
 
     implementation(libs.bundles.flink)
-    //implementation(libs.bundles.logging)
-
     testImplementation(libs.junit.jupiter)
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
-// Apply a specific Java toolchain to ease working on different environments.
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
@@ -59,6 +60,5 @@ tasks {
 //}
 
 tasks.named<Test>("test") {
-    // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 }

@@ -23,4 +23,16 @@ public class TextExtractorFunction extends TableFunction<Row> {
             collect(Row.of(word, word.length()));
         }
     }
+
+    public void eval(String input, String regexString) {
+        if (input == null || input.isEmpty()) {
+            LOGGER.debug("Input is null or empty");
+            return;
+        }
+        String[] words = input.replaceAll("[^a-zA-Z0-9\\s]", "").split(regexString);
+        LOGGER.debug("Extracted {} words from {} : {} ", words.length,  input, words);
+        for (String word : words) {
+            collect(Row.of(word, word.length()));
+        }
+    }
 }

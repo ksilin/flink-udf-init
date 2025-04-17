@@ -16,6 +16,10 @@ repositories {
     maven("https://packages.confluent.io/maven/")
 }
 
+version = "0.0.1"
+group = "org.example"
+base.archivesName.set("table-udf") // Controls the JAR filename
+
 dependencies {
 
     implementation(libs.bundles.flink)
