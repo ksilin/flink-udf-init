@@ -18,7 +18,11 @@ public class TextExtractorFunction extends TableFunction<Row> {
             return;
         }
         String[] words = input.replaceAll("[^a-zA-Z0-9\\s]", "").split("\\s+");
-        LOGGER.debug("Extracted {} words from {} : {} ", words.length,  input, words);
+        LOGGER.trace(" TRACE: Extracted {} words from {} : {} ", words.length,  input, words);
+        LOGGER.debug("DEBUG: Extracted {} words from {} : {} ", words.length,  input, words);
+        LOGGER.info("INFO: Extracted {} words from {} : {} ", words.length,  input, words);
+        LOGGER.warn("WARN: Extracted {} words from {} : {} ", words.length,  input, words);
+        LOGGER.error("ERROR: Extracted {} words from {} : {} ", words.length,  input, words);
         for (String word : words) {
             collect(Row.of(word, word.length()));
         }

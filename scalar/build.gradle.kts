@@ -23,6 +23,7 @@ repositories {
 dependencies {
 
     implementation(libs.bundles.flink)
+    implementation(libs.bundles.log4j)
     testImplementation(libs.junit.jupiter)
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
