@@ -24,6 +24,7 @@ dependencies {
 
     implementation(libs.bundles.flink)
     implementation(libs.bundles.log4j)
+    implementation(libs.jackson.databind)
     testImplementation(libs.junit.jupiter)
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
@@ -38,13 +39,16 @@ java {
 val shadowJar: ShadowJar by tasks
 shadowJar.apply {
     //mergeServiceFiles()
-    dependencies{
-        exclude(dependency(".*:.*:.*"))
-        //exclude(dependency("org.apache.flink:.*:.*"))
-        // cannot handle the libs.bundle.logging or libs.slf4j notation
-        //include(dependency("ch.qos.logback:logback-core:1.5.15"))
-        //include(dependency("ch.qos.logback:logback-classic:1.5.15"))
-        //include(dependency("org.slf4j:slf4j-api:2.0.16"))
+    // Use minimize to only include used classes
+    minimize()
+    dependencies {
+        // Exclude Flink and logging dependencies
+        exclude(dependency("org.apache.flink:.*"))
+        exclude(dependency("io.confluent.flink:.*"))
+        exclude(dependency("org.apache.logging.log4j:.*"))
+        exclude(dependency("org.slf4j:.*"))
+        exclude(dependency("ch.qos.logback:.*"))
+        // Jackson will be included automatically by minimize() since it's used
     }
     archiveClassifier.set("shadow")
 }

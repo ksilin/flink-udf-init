@@ -13,6 +13,7 @@ log4j = "2.20.0"
 logbackContrib = "0.1.5"
 mockito = "5.5.0"
 junit-jupiter = "5.11.1"
+jackson = "2.15.2"
 
 [libraries]
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
@@ -27,6 +28,7 @@ logback-classic = { group = "ch.qos.logback", name = "logback-classic", version.
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 log4j-api = { module = "org.apache.logging.log4j:log4j-api", version.ref = "log4j" }
 log4j-core = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4j" }
+jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
 
 [bundles]
 flink = ["flink-table-api", "flink-confluent-plugin"]
