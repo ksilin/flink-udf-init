@@ -18,11 +18,7 @@ public class TextExtractorFunction extends TableFunction<Row> {
             return;
         }
         String[] words = input.replaceAll("[^a-zA-Z0-9\\s]", "").split("\\s+");
-        LOGGER.trace(" TRACE: Extracted {} words from {} : {} ", words.length,  input, words);
-        LOGGER.debug("DEBUG: Extracted {} words from {} : {} ", words.length,  input, words);
-        LOGGER.info("INFO: Extracted {} words from {} : {} ", words.length,  input, words);
-        LOGGER.warn("WARN: Extracted {} words from {} : {} ", words.length,  input, words);
-        LOGGER.error("ERROR: Extracted {} words from {} : {} ", words.length,  input, words);
+        LOGGER.debug("Extracted {} words from input string.", words.length);
         for (String word : words) {
             collect(Row.of(word, word.length()));
         }
@@ -33,10 +29,12 @@ public class TextExtractorFunction extends TableFunction<Row> {
             LOGGER.debug("Input is null or empty");
             return;
         }
-        String[] words = input.replaceAll("[^a-zA-Z0-9\\s]", "").split(regexString);
-        LOGGER.debug("Extracted {} words from {} : {} ", words.length,  input, words);
+        String[] words = input.split(regexString);
+        LOGGER.debug("Extracted {} words from input string using regex: {}", words.length, regexString);
         for (String word : words) {
-            collect(Row.of(word, word.length()));
+            if (!word.isEmpty()) {
+                collect(Row.of(word, word.length()));
+            }
         }
     }
 }
