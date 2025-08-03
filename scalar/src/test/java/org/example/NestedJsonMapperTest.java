@@ -15,7 +15,7 @@ public class NestedJsonMapperTest {
     private final NestedJsonMapper mapper = new NestedJsonMapper();
     
     @Test
-    public void testWithShipmentDocumentMappings() {
+    public void testWithSimpleShipmentDocument() {
         // Test with the same mappings as ShipmentDocMapper
         Map<String, String> shipmentMappings = createShipmentMappings();
         
@@ -43,6 +43,110 @@ public class NestedJsonMapperTest {
             }
             """;
         
+        String result = mapper.eval(sourceJson, shipmentMappings);
+        assertJsonEquals(expectedJson, result);
+    }
+
+    @Test
+    public void testWithCompleteShipmentDocument() {
+        // This test is migrated from the deleted ShipmentDocMapperTest to ensure
+        // that the generic NestedJsonMapper can handle the complex, real-world scenario.
+        Map<String, String> shipmentMappings = createShipmentMappings();
+
+        String sourceJson = """
+            {
+              "/AMS/YBRV_PMO07": [
+                {
+                  "MANDT": "103",
+                  "SHIPMENT_NUMBER": "0004604557",
+                  "DELIVERY_TYPE": "ZTPR",
+                  "APPOINTMENT_DATE": "0000-00-00",
+                  "APPOINTMENT_TIME": "00:00:00",
+                  "SHIPPING_POINT": "BR18",
+                  "SHIP_TO": "0000733101",
+                  "DELIVERY_CREATED_ON": "2024-07-24",
+                  "LIPS": [
+                    {
+                      "DELIVERY_NUMBER": "0850026493",
+                      "DELIVERY_ITEM": "000010",
+                      "MATERIAL_NUMBER": "000000000090004706",
+                      "MATERIAL_DESCRIPTION": "ESTRADO PALLET RETORNAVEL",
+                      "QUANTITY": "10.0",
+                      "UNIT_OF_MEASURE": "EA",
+                      "FISCAL_NOTE": "",
+                      "EIKP": [
+                        {
+                          "TRACKAGE_ID": "",
+                          "LFA1": [
+                            {
+                              "CARRIER_CNPJ": "57705097000155",
+                              "VTTK": [
+                                {
+                                  "CARRIER_ID": "0100205740",
+                                  "SHIPMENT_CREATED_ON": "2024-07-24",
+                                  "SHIPMENT_DATE": "2024-07-24",
+                                  "SHIPMENT_TIME": "09:57:00",
+                                  "VEHICLE_TYPE": "BR004"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+            """;
+
+        String expectedJson = """
+            {
+              "shipmentDocument": [
+                {
+                  "mandt": "103",
+                  "shipmentNumber": "0004604557",
+                  "deliveryType": "ZTPR",
+                  "appointmentDate": "0000-00-00",
+                  "appointmentTime": "00:00:00",
+                  "shippingPoint": "BR18",
+                  "shippToParty": "0000733101",
+                  "createdOn": "2024-07-24",
+                  "deliveryItems": [
+                    {
+                      "deliveryNumber": "0850026493",
+                      "deliveryItem": "000010",
+                      "material": "000000000090004706",
+                      "description": "ESTRADO PALLET RETORNAVEL",
+                      "deliveryQuantity": "10.0",
+                      "baseUnit": "EA",
+                      "fiscalNote": "",
+                      "trackage": [
+                        {
+                          "trackageId": "",
+                          "shipment": [
+                            {
+                              "carrierCNPJ": "57705097000155",
+                              "changeDocument": [
+                                {
+                                  "carrierId": "0100205740",
+                                  "shipmentCreatedOn": "2024-07-24",
+                                  "shipmentDate": "2024-07-24",
+                                  "shipmentTime": "09:57:00",
+                                  "vehicleType": "BR004"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+            """;
+
         String result = mapper.eval(sourceJson, shipmentMappings);
         assertJsonEquals(expectedJson, result);
     }
@@ -318,12 +422,15 @@ public class NestedJsonMapperTest {
     }
     
     private void assertJsonEquals(String expected, String actual) {
-        // Remove whitespace and compare JSON strings
-        String normalizedExpected = expected.replaceAll("\\s+", "");
-        String normalizedActual = actual.replaceAll("\\s+", "");
-        
-        assertEquals(normalizedExpected, normalizedActual, 
-            "JSON structures should be equal.\nExpected: " + expected + "\nActual: " + actual);
+        try {
+            com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+            com.fasterxml.jackson.databind.JsonNode expectedNode = mapper.readTree(expected);
+            com.fasterxml.jackson.databind.JsonNode actualNode = mapper.readTree(actual);
+            assertEquals(expectedNode, actualNode,
+                "JSON structures should be equal.\nExpected: " + expected + "\nActual: " + actual);
+        } catch (Exception e) {
+            fail("Failed to parse or compare JSON strings.", e);
+        }
     }
     
     private Map<String, String> createShipmentMappings() {
