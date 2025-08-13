@@ -1,0 +1,244 @@
+syntax = "proto3";
+
+package vehicle.commands;
+
+import "vehicle-objects.proto";
+
+// Base command structure
+message Command {
+  string id = 10;
+  string namespace = 20;
+  string source = 30;
+  string correlation_id = 40;
+  string ts = 50;
+}
+
+// Barrier control command
+message BarrierControlCmd {
+  Command command = 10;
+  string tenant_alias = 20;
+  string lane = 30;
+  string address = 40;
+  
+  enum Action {
+    UNSPECIFIED = 0;
+    OPEN = 10;
+  }
+  
+  Action action = 50;
+}
+
+// Trackable CRUD command
+message TrackableCudCmd {
+  Command command = 10;
+  vehicle.objects.Trackable trackable = 20;
+  
+  enum EventType {
+    UNSPECIFIED = 0;
+    CREATE = 10;
+    UPDATE = 20;
+    DELETE = 30;
+  }
+  
+  EventType event_type = 30;
+}
+
+// Trackable pairing command
+message TrackablePairingCmd {
+  Command command = 10;
+  vehicle.objects.LocationProvider location_provider = 20;
+  vehicle.objects.Trackable trackable = 30;
+  
+  enum EventType {
+    UNSPECIFIED = 0;
+    CREATE = 10;
+    DELETE = 20;
+  }
+  
+  EventType event_type = 40;
+}
+
+// Send email command
+message SendEmailCmd {
+  Command command = 10;
+  string email_template = 20;
+  string email_subject = 30;
+  string email_content = 40;
+  string email_adress = 50;  // Note: typo preserved from original
+}
+
+// Vehicle stay command
+message VehicleStayCmd {
+  Command command = 10;
+  
+  enum EventType {
+    TYPE_UNSPECIFIED = 0;
+    CREATE = 10;
+    UPDATE = 20;
+    DELETE = 30;
+  }
+  
+  EventType event_type = 20;
+  vehicle.objects.VehicleStay vehicle_stay = 30;
+}
+
+// Location provider command
+message LocationProviderCmd {
+  Command command = 10;
+  vehicle.objects.LocationProvider location_provider = 20;
+  
+  enum EventType {
+    UNSPECIFIED = 0;
+    CREATE = 10;
+    DELETE = 20;
+    UPDATE = 30;
+  }
+  
+  EventType event_type = 30;
+}
+
+// Transport order command
+message TransportOrderCmd {
+  Command command = 10;
+  vehicle.objects.TransportOrder transport_order = 20;
+  
+  enum EventType {
+    UNSPECIFIED = 0;
+    CREATE = 10;
+    DELETE = 20;
+    UPDATE = 30;
+  }
+  
+  EventType event_type = 30;
+}
+
+// Notification command
+message NotificationCmd {
+  Command command = 10;
+  vehicle.objects.Notification notification = 20;
+  
+  enum EventType {
+    UNSPECIFIED = 0;
+    CREATE = 10;
+    UPDATE = 20;
+    DELETE = 30;
+  }
+  
+  EventType event_type = 30;
+}
+
+// Appointment command
+message AppointmentCmd {
+  Command command = 10;
+  vehicle.objects.Appointment appointment = 20;
+  
+  enum EventType {
+    UNSPECIFIED = 0;
+    CREATE = 10;
+    UPDATE = 20;
+    DELETE = 30;
+  }
+  
+  EventType event_type = 30;
+}
+
+// Service order command
+message ServiceOrderCmd {
+  Command command = 10;
+  
+  enum EventType {
+    TYPE_UNSPECIFIED = 0;
+    CREATED = 10;
+    UPDATED = 20;
+    DELETED = 30;
+    DISPATCHABLE = 40;
+  }
+  
+  EventType event_type = 20;
+  vehicle.objects.Order serviceOrder = 30;
+}
+
+// Work order command
+message WorkOrderCmd {
+  Command command = 10;
+  
+  enum EventType {
+    TYPE_UNSPECIFIED = 0;
+    CREATED = 10;
+    UPDATED = 20;
+    DELETED = 30;
+  }
+  
+  EventType event_type = 20;
+  vehicle.objects.Job workOrder = 30;
+}
+
+// Report problem command
+message ReportProblemCmd {
+  Command command = 10;
+  
+  enum EventType {
+    TYPE_UNSPECIFIED = 0;
+    CREATED = 10;
+    UPDATED = 20;
+    DELETED = 30;
+  }
+  
+  EventType event_type = 20;
+  vehicle.objects.ProblemNotificationBody problemNotificationBody = 30;
+}
+
+// Fence property update command
+message FencePropertyUpdateCmd {
+  Command command = 10;
+  
+  enum EventType {
+    TYPE_UNSPECIFIED = 0;
+    CREATED = 10;
+    UPDATED = 20;
+  }
+  
+  EventType event_type = 20;
+  string fence_id = 30;
+  repeated string label_list = 40;
+  optional int32 capacity = 50;
+  optional string fence_type = 60;
+  optional string tenant_id = 70;
+}
+
+// Process update command
+message ProcessUpdateCmd {
+  Command command = 10;
+  
+  enum EventType {
+    TYPE_UNSPECIFIED = 0;
+    CREATED = 10;
+    UPDATED = 20;
+  }
+  
+  EventType event_type = 20;
+  vehicle.objects.ProcessUpdate processUpdate = 30;
+}
+
+// Service order poll command
+message ServiceOrderPollCmd {
+  Command command = 10;
+  string service_order_number = 20;
+  int32 poll_interval_minutes = 30;
+}
+
+// Omlox pairing command
+message OmloxPairingCmd {
+  Command command = 10;
+  string location_provider_id = 20;
+  string trackable_id = 30;
+  
+  enum EventType {
+    UNSPECIFIED = 0;
+    CREATE = 10;
+    UPDATE = 20;
+    DELETE = 30;
+  }
+  
+  EventType event_type = 40;
+}

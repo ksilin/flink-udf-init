@@ -9,11 +9,14 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 plugins {
     java
     id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("com.google.protobuf") version "0.9.4"
 }
 
 version = "0.0.1"
 group = "org.example"
 base.archivesName.set("scalar-udf") // Controls the JAR filename
+
+val protoVersion = "3.25.3"
 
 repositories {
     mavenCentral()
@@ -25,6 +28,7 @@ dependencies {
     implementation(libs.bundles.flink)
     implementation(libs.bundles.log4j)
     implementation(libs.jackson.databind)
+    implementation(libs.bundles.proto)
     testImplementation(libs.junit.jupiter)
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
@@ -57,6 +61,39 @@ tasks {
     build {
         dependsOn(shadowJar)
     }
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:${protoVersion}"
+    }
+
+//    generateProtoTasks {
+//        all().forEach { task ->
+//            task.plugins {
+//                id("java"){
+//                    //option("lite")
+//                }
+//            }
+//        }
+//    }
+}
+
+sourceSets {
+    main {
+        proto {
+            srcDir("src/main/proto")
+        }
+        java {
+            srcDirs("build/generated/sources/proto/main/java")
+        }
+    }
+}
+
+// Entry vehicle-events.proto is a duplicate but no duplicate handling strategy has been set.
+// Please refer to https://docs.gradle.org/8.12/dsl/org.gradle.api.tasks.Copy.html#org.gradle.api.tasks.Copy:duplicatesStrategy for details.
+tasks.withType<ProcessResources> {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
 //application {

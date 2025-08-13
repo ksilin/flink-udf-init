@@ -1,0 +1,655 @@
+syntax = "proto3";
+
+package vehicle.objects;
+
+import "google/protobuf/wrappers.proto";
+
+message Object {
+  string alias = 10;
+  string namespace = 20;
+  string created = 30;
+  string updated = 40;
+  repeated Relationship relationships = 50;
+  string correlation_id = 60;
+}
+
+message Trackables {
+  repeated Trackable trackable = 10;
+}
+
+message Trackable {
+  Object object = 10;
+  string omlox_sync_ts = 20;
+  string tenant_alias = 30;
+  
+  oneof trackable_type {
+    Vehicle vehicle = 70;
+    Wheelset wheelset = 80;
+    Wheel wheel = 90;
+    RollingRackWarehouse rollingRackWarehouse = 100;
+    Employee employee = 110;
+    Customer customer = 130;
+    Key key = 140;
+  }
+  
+  message Vehicle {
+    string vehicle_identification_number = 20;
+    string vehicle_license_plate = 30;
+    string customer_name = 40;
+    string vehicle_type = 50;
+    string lane = 80;
+    string vehicle_model = 90;
+    //CustomerManagerList customer_manager_list = 100;
+    string last_transited_entered = 110;
+    string alternative_vehicle_identifier = 130;
+  }
+  
+  message Customer {
+    string customer_key = 10;
+    string customer_external_key = 20;
+    string first_name = 30;
+    string name = 40;
+    string company = 50;
+    string branch = 60;
+    string driver = 70;
+  }
+  
+  message Wheelset {
+    string customer_alias = 10;
+  }
+  
+  message Wheel {
+    string wheel_type = 10;
+    string customer_alias = 20;
+  }
+  
+  message RollingRackWarehouse {
+  }
+  
+  message Key {
+    string vehicle_alias = 10;
+    string vehicle_license_plate = 20;
+  }
+  
+  message Employee {
+    string first_name = 10;
+    string name = 20;
+    string email = 30;
+    string employee_id = 40;
+    string role = 50;
+    string department = 60;
+    string superior_employee_alias = 70;
+    repeated string labels = 80;
+    string tenant_alias = 90;
+    repeated MechanicUnavailableTimes unavailable_times = 100;
+    string defaultWorkingTimeStart = 110;
+    string defaultWorkingTimeEnd = 120;
+  }
+}
+
+message Fences {
+  repeated Fence fences = 10;
+}
+
+message Fence {
+  Object object = 10;
+  string fence_name = 20;
+  string omlox_object = 30;
+  string omlox_sync_ts = 40;
+  string tenant_alias = 50;
+  int32 capacity = 60;
+  repeated string included_trackable_types = 70;
+  repeated string excluded_trackable_types = 80;
+  repeated Trackable trackables = 90;
+  
+  enum FenceType {
+    TYPE_UNSPECIFIED = 0;
+    DEFAULT = 10;
+    FUNCTIONAL = 20;
+  }
+  
+  FenceType fence_type = 100;
+  repeated string labels = 110;
+  string status = 120;
+  bool external = 130;
+  FenceState fenceState = 140;
+  repeated ServiceProviderAssetMapping service_provider_asset_mappings = 150;
+}
+
+message ServiceProviderAssetMapping {
+  string service_provider_id = 10;
+  repeated string asset_types = 20;
+}
+
+message FenceState {
+  string fenceId = 10;
+  string workOrder = 20;
+  string currentState = 30;
+  string mechanic = 40;
+  string timestamp = 50;
+}
+
+message Label {
+  Object object = 10;
+  string name = 20;
+  string target_object_type = 30;
+  string tenant_alias = 40;
+}
+
+message Status {
+  Object object = 10;
+  string name = 20;
+  string priority = 30;
+  string target_object_type = 40;
+  string tenant_alias = 50;
+}
+
+message VehicleStay {
+  Object object = 10;
+  Trackable trackable_vehicle = 20;
+  string tenant_alias = 30;
+  string entry_identified_date_time = 40;
+  string entry_identified_lane = 50;
+  string entry_lane = 60;
+  string entry_date_time = 70;
+  string exit_lane = 80;
+  string exit_date_time = 90;
+  string exit_identified_date_time = 100;
+  string exit_identified_lane = 110;
+  bool customer_is_waiting = 120;
+  string vehicle_visit_reason = 130;
+  google.protobuf.BoolValue external = 140;
+  string exit_external_drive_date_time = 150;
+  string exit_external_drive_lane = 160;
+  string entry_external_drive_date_time = 170;
+  string entry_external_drive_lane = 180;
+}
+
+message LocationProvider {
+  Object object = 10;
+  string name = 20;
+  string tenant_alias = 30;
+  string provider_type = 40;
+  string omlox_sync_ts = 50;
+  Trackable trackable = 60;
+  string trackable_identifier = 70;
+  ExtendedData extended_data = 80;
+  
+  message ExtendedData {
+    double accuracy = 10;
+    bool associated = 20;
+    double course = 30;
+    string crs = 40;
+    string elevation_ref = 50;
+    int32 floor = 60;
+    Position position = 70;
+    Properties properties = 80;
+    string provider_id = 90;
+    string provider_type = 100;
+    string source = 110;
+    double speed = 120;
+    string timestamp_generated = 130;
+    string timestamp_sent = 140;
+    repeated string trackables = 150;
+    
+    message Position {
+      repeated double coordinates = 10;
+      string type = 20;
+    }
+    
+    message Properties {
+      oneof property_type {
+        QuuppaOriginal quuppa_original = 10;
+      }
+    }
+    
+    message QuuppaOriginal {
+      double battery_voltage = 10;
+      int64 battery_voltage_TS = 20;
+      int64 button_1_last_press_TS = 30;
+      string button_1_state = 40;
+      repeated double location = 50;
+      string location_coord_sys_id = 60;
+      string location_movement_status = 70;
+      double location_radius = 80;
+      int64 location_TS = 90;
+      string location_type = 100;
+      string tag_id = 110;
+      string tag_name = 120;
+      string tag_state = 130;
+      int64 tag_state_TS = 140;
+    }
+  }
+}
+
+message TransportOrder {
+  string id = 1;
+  Object object = 10;
+  Trackable transport_trackable = 20;
+  string tenant_alias = 30;
+  string reporter = 40;
+  string assignee = 50;
+  ServiceProvider service_provider = 60;
+  
+  enum Status {
+    UNSPECIFIED = 0;
+    OPEN = 10;
+    ASSIGNED = 20;
+    IN_PROGRESS = 30;
+    ARRIVED = 40;
+    CLOSED = 50;
+    LATE = 60;
+    WRONG_DESTINATION = 70;
+  }
+  
+  Status status = 70;
+  Fence source_fence = 80;
+  Fence destination_areal = 90;
+  Fence destination_fence = 100;
+  string start_ts = 110;
+  string end_ts = 130;
+  string target_ts = 140;
+  string omlox_sync_ts = 150;
+  string expected_return_ts = 160;
+}
+
+message ServiceProvider {
+  string id = 1;
+  string name = 20;
+}
+
+message Appointment {
+  Object object = 10;
+  Trackable trackable_vehicle = 20;
+  Trackable trackable_customer = 30;
+  string service_agent = 40;
+  string appointment_start_ts = 50;
+  string tenant_alias = 60;
+  Trackable service_advisor = 70;
+}
+
+message Tenant {
+  Object object = 10;
+  string address = 20;
+  bool omlox_enabled = 30;
+}
+
+message Relationship {
+  Relationship.Object object = 10;
+  string source_name = 20;
+  string target_name = 30;
+  
+  enum Qualifier {
+    FIELD_UNDEFINED = 0;
+    PAIRED_WITH = 10;
+    CONTAINS = 20;
+    CONSISTS_OF = 30;
+  }
+  
+  Qualifier qualifier = 40;
+  string omlox_sync_ts = 50;
+
+  message Object {
+    string alias = 10; // Business identifier of the object, UUID
+    string namespace = 20; // Example (namespace.business object.subtype: object.trackable.vehicle)
+    string created = 30; // ISO 8601, YYYY-MM-DDThh:mm:ss.fffZ, UTC, Example 2009-01-01T12:00:00.000Z
+    string updated = 40; // ISO 8601, YYYY-MM-DDThh:mm:ss.fffZ, UTC, Example 2009-01-01T12:00:00.000Z
+    string correlation_id = 60;
+  }
+}
+
+message Employee {
+  Object object = 10;
+  string tenant_alias = 20;
+}
+
+message Properties {
+  string field = 10;
+  
+  oneof value {
+    uint32 int_value = 20;
+    uint64 long_value = 30;
+    float float_value = 40;
+    double double_value = 50;
+    bool boolean_value = 60;
+    string string_value = 70;
+  }
+}
+
+message VehicleStayList {
+  repeated VehicleStay vehicle_stays = 10;
+}
+
+message LocationProviderList {
+  repeated LocationProvider location_provider = 10;
+}
+
+message AppointmentList {
+  repeated Appointment appointments = 10;
+}
+
+message TransportOrderList {
+  repeated TransportOrder transportOrders = 10;
+}
+
+message CustomerManagerList {
+  repeated Trackable employees = 10;
+}
+
+message Notifications {
+  repeated Notification notifications = 10;
+}
+
+message Notification {
+  Object object = 10;
+  
+  enum Level {
+    UNSPECIFIED = 0;
+    INFO = 10;
+    WARN = 20;
+    ERROR = 30;
+  }
+  
+  Level level = 20;
+  string tenant_alias = 30;
+  string created_at = 40;
+  string expires_at = 50;
+  string text = 60;
+}
+
+message Orders {
+  repeated Order order = 1;
+}
+
+message Order {
+  OrderDistribution orderDistribution = 1;
+  string orderNumber = 2;
+  string creationDate = 3;
+  string completionDate = 4;
+  string guideNumber = 5;
+  ServiceInformation serviceInformation = 6;
+  string serviceAdvisor = 7;
+  Dealer dealer = 8;
+  string customerNumber = 9;
+  PassingCustomerInformation passingCustomerInformation = 10;
+  string lastChangedDMSTimestamp = 11;
+  string vehicleTrackableId = 12;
+  string dispatcherID = 13;
+  string lastUpdatedSPPTimestamp = 14;
+  string tenant_alias = 15;
+  string keyTrackableId = 16;
+  bool washingDone = 17;
+}
+
+message Dealer {
+  string warrantyDealerNumber = 1;
+  string distributionPartnerNumber = 2;
+  string outletNumber = 3;
+}
+
+message ServiceInformation {
+  JobList jobList = 1;
+}
+
+message OrderDistribution {
+  string comment = 1;
+  
+  enum Priority {
+    CRITICAL = 0;
+    CLIENT_WAITING = 10;
+    HIGH = 20;
+    NORMAL = 30;
+    LOW = 40;
+  }
+  
+  Priority priority = 2;
+  string dispositionDate = 4;
+  repeated WorkOrder workOrders = 5;
+  
+  enum OrderStatus {
+    ORDERSTATUS_UNSPECIFIED = 0;
+    PENDING = 10;
+    READY = 20;
+    COMPLETED = 30;
+    CREATED = 40;
+    WORK_IN_PROGRESS = 50;
+    INCOMPLETED_COMPLETED = 60;
+    CANCELLED = 70;
+  }
+  
+  OrderStatus status = 12;
+}
+
+message WorkOrder {
+  uint32 workOrderNumber = 1;
+  uint32 parentWorkOrderNumber = 2;
+  string mechanic = 3;
+  float sortNumber = 4;
+  string liftingPlatform = 5;
+  string comment = 6;
+  
+  enum Priority {
+    CRITICAL = 0;
+    CLIENT_WAITING = 10;
+    HIGH = 20;
+    NORMAL = 30;
+    LOW = 40;
+  }
+  
+  Priority priority = 7;
+  repeated string labels = 8;
+  uint32 absolutePosition = 9;
+  
+  enum Status {
+    CREATED = 0;
+    WORK_IN_PROGRESS = 1;
+    COMPLETED = 2;
+    CANCELLED = 3;
+  }
+  
+  Status status = 10;
+}
+
+message JobList {
+  repeated Job jobs = 1;
+}
+
+message JobDistribution {
+  uint32 workOrderNumber = 1;
+  string comment = 2;
+  repeated string labels = 3;
+  
+  enum Status {
+    CREATED = 0;
+    WORK_IN_PROGRESS = 1;
+    COMPLETED = 2;
+    CANCELLED = 3;
+  }
+  
+  Status status = 4;
+  string priority = 5;
+  repeated ProgressChangelog progressChangelog = 6;
+}
+
+message ProgressChangelog {
+  string timestamp = 1;
+  string type = 2;
+}
+
+message Job {
+  JobDistribution jobDistribution = 1;
+  string jobDescription = 2;
+  PackageList packageList = 3;
+  string jobIdentifier = 4;
+  CustomerStatement customerStatement = 5;
+  FlatRateUnitList flatRateUnitList = 6;
+  SubletList subletList = 7;
+  string textPosition = 8;
+  string jobComment = 9;
+}
+
+message Sublet {
+  string subletCode = 1;
+  string description = 2;
+  float quantity = 3;
+}
+
+message SubletList {
+  repeated Sublet sublets = 1;
+}
+
+message CustomerStatement {
+  string originalStatement = 1;
+  QualifiedStatement qualifiedStatement = 2;
+}
+
+message QualifiedStatement {
+  QualifiedStatementLocation location = 1;
+}
+
+message QualifiedStatementLocation {
+  string description = 1;
+}
+
+message Package {
+  string packageNumber = 1;
+  FlatRateUnitList flatRateUnitList = 2;
+  SubletList subletList = 3;
+  string description = 4;
+}
+
+message PackageList {
+  repeated Package packages = 1;
+}
+
+message FlatRateUnitList {
+  repeated FlatRateUnit flatRateUnits = 1;
+}
+
+message FlatRateUnit {
+  string number = 1;
+  float quantity = 2;
+  string description = 3;
+}
+
+message PassingCustomerInformation {
+  string lastName = 1;
+  string firstName = 2;
+  string salutationCode = 3;
+  bool isCompany = 4;
+  string companyName = 5;
+  DispositionVehicleReference vehicleReference = 6;
+}
+
+message DispositionVehicleReference {
+  string vehicleIdentification = 1;
+  string numberPlate = 2;
+  string brand = 3;
+  string modelDesignation = 4;
+  string modelCode = 5;
+  DispositionVehicleMileage mileage = 6;
+}
+
+message DispositionVehicleMileage {
+  string units = 1;
+  string unitsInDisplayFormat = 2;
+  string valueInDisplayFormat = 3;
+  int32 value = 4;
+}
+
+message MechanicStateList {
+  repeated MechanicState mechanicState = 10;
+}
+
+message MechanicState {
+  Trackable mechanic = 10;
+  string status = 20;
+  bool problemReported = 30;
+  TransportOrder.Status currentWorkOrderTransportStatus = 40;
+  bool paused = 50;
+  string statusToDisplay = 60;
+  string displayColor = 70;
+  WorkOrder.Status workOrderStatus = 80;
+  float workOrderProgressPlan = 100;
+  float workOrderProgressActualSoll = 110;
+  float workOrderProgressActualIst = 120;
+  string vin = 130;
+  string licensePlate = 140;
+  bool preparingTimeRunning = 150;
+  bool workRequested = 160;
+  string liftingPlatform = 170;
+  WorkOrderCalculated lastKnownWorkOrder = 180;
+  repeated MechanicPauseTimes pause_times = 190;
+}
+
+message ProblemNotificationBody {
+  string id = 5;
+  string mechanicId = 10;
+  
+  enum ProblemType {
+    OTHER = 0;
+  }
+  
+  ProblemType problemType = 20;
+  string comment = 30;
+  bool callMaster = 40;
+  string dispatcherId = 50;
+  bool solved = 60;
+  string tenantAlias = 70;
+}
+
+message ProblemNotificationList {
+  repeated ProblemNotificationBody listOfReportedProblems = 10;
+}
+
+message WorkOrderCalculated {
+  string id = 10;
+  string orderNumber = 11;
+  int32 workOrderNumber = 12;
+  WorkOrder.Priority priority = 13;
+  WorkOrder.Status status = 14;
+  
+  message JobList {
+    repeated Job jobs = 1;
+  }
+  
+  JobList jobList = 15;
+  string mechanic = 16;
+  string liftingPlatform = 17;
+  repeated string labels = 18;
+  string comment = 19;
+}
+
+message MechanicUnavailableTimes {
+  int32 calendarWeek = 10;
+  string shift = 20;
+  repeated string unavailableDays = 30;
+}
+
+message ProcessUpdate {
+  string timestamp = 10;
+  string orderNumber = 20;
+  string vin = 30;
+  string licensePlate = 40;
+  string processStepToDisplay = 50;
+  
+  enum Classification {
+    NORMAL = 0;
+    OK = 1;
+    WARNING = 2;
+    CRITICAL = 3;
+  }
+  
+  Classification classification = 60;
+}
+
+message MechanicPauseTimes {
+  string timestamp = 10;
+  
+  enum State {
+    STARTED = 0;
+    PAUSED = 1;
+  }
+  
+  State type = 20;
+}

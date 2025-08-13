@@ -1,0 +1,271 @@
+syntax = "proto3";
+
+package vehicle.events;
+
+import "vehicle-objects.proto";
+
+// Base event structure
+message Event {
+  string id = 10;
+  string namespace = 20;
+  string source = 30;
+  string correlation_id = 40;
+  string ts = 50;
+}
+
+// Fence event when trackables enter/exit a fence region
+message FenceEventReceived {
+  Event event = 10;
+  string fence_id = 20;
+  string omlox_json_event = 30;
+  
+  enum EventType {
+    TYPE_UNSPECIFIED = 0;
+    REGION_ENTRY = 10;
+    REGION_EXIT = 20;
+  }
+  
+  EventType event_type = 40;
+  repeated vehicle.objects.Trackable trackables = 50;
+  string foreign_id = 60;
+  string entry_ts = 70;
+  string exit_ts = 80;
+}
+
+// Trackable Create/Update/Delete events
+message TrackableCud {
+  Event event = 10;
+  
+  enum EventType {
+    TYPE_UNSPECIFIED = 0;
+    CREATED = 10;
+    UPDATED = 20;
+    DELETED = 30;
+  }
+  
+  EventType event_type = 20;
+  vehicle.objects.Trackable trackable = 30;
+}
+
+// Trackable data received event
+message TrackableDataReceived {
+  Event event = 10;
+  vehicle.objects.Trackable trackable = 20;
+}
+
+// Location provider data received event
+message LocationProviderDataReceived {
+  Event event = 10;
+  vehicle.objects.LocationProvider location_provider = 20;
+}
+
+// Vehicle identification event
+message VehicleIdentified {
+  Event event = 10;
+  string vehicle_license_plate = 20;
+  string lane = 30;
+  bool isEntryOrExit = 40;
+  
+  enum Direction {
+    DIRECTION_UNSPECIFIED = 0;
+    IN = 10;
+    OUT = 20;
+    UNKNOWN = 30;
+  }
+  
+  Direction direction = 50;
+  string ts = 60;
+}
+
+// Vehicle site transit event
+message VehicleSiteTransited {
+  Event event = 10;
+  string vehicle_license_plate = 20;
+  string lane = 30;
+  
+  enum NewStatus {
+    STATUS_UNSPECIFIED = 0;
+    ENTERED = 10;
+    EXITED = 20;
+    STATE_UNKNOWN = 30;
+  }
+  
+  NewStatus new_status = 40;
+  string ts = 50;
+  string tenant_alias = 60;
+}
+
+// Relationship Create/Update/Delete events
+message RelationshipCud {
+  Event event = 10;
+  
+  enum EventType {
+    TYPE_UNSPECIFIED = 0;
+    CREATED = 10;
+    DELETED = 20;
+    UPDATED = 30;
+  }
+  
+  EventType event_type = 20;
+  vehicle.objects.Relationship relationship = 30;
+}
+
+// Location provider Create/Update/Delete events
+message LocationProviderCud {
+  Event event = 10;
+  
+  enum EventType {
+    TYPE_UNSPECIFIED = 0;
+    CREATED = 10;
+    UPDATED = 20;
+    DELETED = 30;
+  }
+  
+  EventType event_type = 20;
+  vehicle.objects.LocationProvider location_provider = 30;
+}
+
+// Notification Create/Update/Delete events
+message NotificationCud {
+  Event event = 10;
+  
+  enum EventType {
+    TYPE_UNSPECIFIED = 0;
+    CREATED = 10;
+    UPDATED = 20;
+    DELETED = 30;
+  }
+  
+  EventType event_type = 20;
+  vehicle.objects.Notification notification = 30;
+}
+
+// Vehicle stay Create/Update/Delete events
+message VehicleStayCud {
+  Event event = 10;
+  
+  enum EventType {
+    TYPE_UNSPECIFIED = 0;
+    CREATED = 10;
+    UPDATED = 20;
+    DELETED = 30;
+  }
+  
+  EventType event_type = 20;
+  vehicle.objects.VehicleStay vehicle_stay = 30;
+}
+
+// Email sent event
+message EmailSent {
+  Event event = 10;
+  string event_type = 20;
+  string email = 30;
+}
+
+// Transport order Create/Update/Delete events
+message TransportOrderCud {
+  Event event = 10;
+  
+  enum EventType {
+    TYPE_UNSPECIFIED = 0;
+    CREATED = 10;
+    UPDATED = 20;
+    DELETED = 30;
+  }
+  
+  EventType event_type = 20;
+  vehicle.objects.TransportOrder transport_order = 30;
+}
+
+// Appointment Create/Update/Delete events
+message AppointmentCud {
+  Event event = 10;
+  
+  enum EventType {
+    TYPE_UNSPECIFIED = 0;
+    CREATED = 10;
+    UPDATED = 20;
+    DELETED = 30;
+  }
+  
+  EventType event_type = 20;
+  vehicle.objects.Appointment appointment = 30;
+}
+
+// Service order received event
+message ServiceOrderReceived {
+  Event event = 10;
+  
+  enum EventType {
+    TYPE_UNSPECIFIED = 0;
+    CREATED = 10;
+    UPDATED = 20;
+    DELETED = 30;
+  }
+  
+  EventType event_type = 20;
+  vehicle.objects.Order serviceOrder = 30;
+}
+
+// Progress update event
+message ProgressUpdate {
+  Event event = 10;
+  string timestamp = 20;
+  string type = 30;
+  string jobIdentifier = 40;
+  string serviceOrderNumber = 50;
+}
+
+// List of trackable CUD events
+message TrackableCudList {
+  repeated TrackableCud trackableCuds = 1;
+}
+
+// Fence Create/Update/Delete events
+message FenceCud {
+  Event event = 10;
+  
+  enum EventType {
+    TYPE_UNSPECIFIED = 0;
+    CREATED = 10;
+    DELETED = 20;
+    UPDATED = 30;
+  }
+  
+  EventType event_type = 20;
+  vehicle.objects.Fence fence = 30;
+}
+
+// Location update event
+message LocationUpdate {
+  Event event = 10;
+  vehicle.objects.LocationProvider.ExtendedData extended_data = 20;
+}
+
+// Trackable fence transit event
+message TrackableFenceTransited {
+  Event event = 10;
+  vehicle.objects.Trackable trackable = 20;
+  vehicle.objects.Fence fence = 30;
+  EventType event_type = 40;
+  string tenant_alias = 50;
+  string ts = 60;
+  
+  enum EventType {
+    STATUS_UNSPECIFIED = 0;
+    ENTERED = 10;
+    EXITED = 20;
+  }
+}
+
+// Process update event
+message ProcessUpdateEvt {
+  Event event = 10;
+  vehicle.objects.ProcessUpdate processUpdate = 20;
+  
+  enum EventType {
+    UPDATED = 0;
+  }
+  
+  EventType event_type = 30;
+}

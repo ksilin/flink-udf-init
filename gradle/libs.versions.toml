@@ -5,8 +5,8 @@
 guava = "33.3.1-jre"
 flink = "1.20.0"
 confluent-plugin = "1.20-42"
-kafka = "3.7.2"
-confluent = "7.7.2"
+kafka = "3.9.1"
+confluent = "7.9.1"
 slf4j = "2.0.16"
 logback = "1.5.15"
 log4j = "2.20.0"
@@ -14,24 +14,34 @@ logbackContrib = "0.1.5"
 mockito = "5.5.0"
 junit-jupiter = "5.11.1"
 jackson = "2.15.2"
+proto = "3.25.3"
 
 [libraries]
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
-junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
+
 flink-table-api = { module = "org.apache.flink:flink-table-api-java", version.ref = "flink" }
 flink-confluent-plugin = { module = "io.confluent.flink:confluent-flink-table-api-java-plugin", version.ref = "confluent-plugin" }
 kafka-clients = { module = "org.apache.kafka:kafka-clients", version.ref = "kafka" }
 cflt-sr-client = { module = "io.confluent:kafka-schema-registry-client", version.ref = "confluent" }
+
+jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
+
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
 logback-core = { group = "ch.qos.logback", name = "logback-core", version.ref = "logback" }
 logback-classic = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
-mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 log4j-api = { module = "org.apache.logging.log4j:log4j-api", version.ref = "log4j" }
 log4j-core = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4j" }
-jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
+
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+
+kstreams-proto = { module = "io.confluent:kafka-streams-protobuf-serde", version.ref = "confluent" }
+kafka-proto = { module = "io.confluent:kafka-protobuf-serializer", version.ref = "confluent" }
+java-proto = { module = "com.google.protobuf:protobuf-java", version.ref = "proto" }
 
 [bundles]
 flink = ["flink-table-api", "flink-confluent-plugin"]
 logging = ["slf4j-api", "logback-core", "logback-classic"]
 testing = ["junit-jupiter", "mockito-core"]
 log4j = ["log4j-api", "log4j-core"]
+proto = ["kstreams-proto", "kafka-proto", "java-proto"]
